@@ -14,17 +14,17 @@ vector<vector<int>> solutions;
 // 檢查第 i 欄放在 row 是否合法
 // ==============================
 bool isSafe(int i, int row) {
-    // TODO:
-    // 檢查是否和前面 1 ~ i-1 欄的皇后衝突
-    //
-    // 衝突條件：
-    // 1. 同一列：c[j] == row
-    // 2. 同一對角線：abs(c[j] - row) == abs(j - i)
-    //
-    // 若無衝突，回傳 true
-    // 否則回傳 false
+    for (int j = 1; j < i; j++) {
+        // 同一列
+        if (c[j] == row)
+            return false;
 
-    return true; // 請修改
+        // 同一對角線
+        if (abs(c[j] - row) == abs(j - i))
+            return false;
+    }
+
+    return true;
 }
 
 // ==============================
@@ -32,16 +32,17 @@ bool isSafe(int i, int row) {
 // i 表示目前要放第 i 欄皇后
 // ==============================
 void backtrack(int i, int n) {
-    // TODO:
-    // 若 i > n，表示找到一組完整解
-    // 1. 將 c[1..n] 存入 solutions
-    // 2. return
+    if (i > n) {
+        solutions.push_back(c);
+        return;
+    }
 
-    // TODO:
-    // 對 row = 1 到 n 逐一嘗試
-    // 若 isSafe(i, row) 為 true：
-    //   1. 設 c[i] = row
-    //   2. 遞迴呼叫 backtrack(i + 1, n)
+    for (int row = 1; row <= n; row++) {
+        if (isSafe(i, row)) {
+            c[i] = row;
+            backtrack(i + 1, n);
+        }
+    }
 }
 
 // ==============================
@@ -64,9 +65,10 @@ void printBoard(const vector<int>& sol) {
 
     for (int row = 1; row <= n; row++) {
         for (int col = 1; col <= n; col++) {
-            // TODO:
-            // 若第 col 欄皇后在第 row 列，印 "Q "
-            // 否則印 ". "
+            if (sol[col] == row)
+                cout << "Q ";
+            else
+                cout << ". ";
         }
         cout << "\n";
     }
@@ -79,9 +81,7 @@ void solveNQueens(int n) {
     c.assign(n + 1, 0);
     solutions.clear();
 
-    // TODO:
-    // 從第 1 欄開始回溯
-    // backtrack(1, n);
+    backtrack(1, n);
 
     cout << "n = " << n << "\n";
     cout << "Total solutions = " << solutions.size() << "\n";
@@ -89,23 +89,20 @@ void solveNQueens(int n) {
     // 印前兩個解
     if (!solutions.empty()) {
         cout << "First solution: ";
-        // TODO:
-        // printSolution(solutions[0]);
+        printSolution(solutions[0]);
         cout << "\n";
     }
 
     if (solutions.size() >= 2) {
         cout << "Second solution: ";
-        // TODO:
-        // printSolution(solutions[1]);
+        printSolution(solutions[1]);
         cout << "\n";
     }
 
     // n = 8 時印出至少一組棋盤
     if (n == 8 && !solutions.empty()) {
         cout << "\nOne board for n = 8:\n";
-        // TODO:
-        // printBoard(solutions[0]);
+        printBoard(solutions[0]);
     }
 
     cout << "\n";
